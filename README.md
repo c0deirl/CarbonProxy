@@ -29,7 +29,7 @@ git clone https://github.com/c0deirl/CarbonProxy.git
 cd CarbonProxy
 
 # Start the container
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 Access the dashboard at **`http://<your-server-ip>:8090`**.
