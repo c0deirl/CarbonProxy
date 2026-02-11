@@ -1,0 +1,13 @@
+services:
+  carbonproxy:
+    build: .
+    container_name: carbonproxy
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      # Set the IP manually if auto-discovery fails or if not using host network
+      - PRINTER_IP=
+      # Optional: Set MainboardID if known (helps if auto-discovery fails)
+      # - MAINBOARD_ID=
+    # network_mode: host # Uncomment this line to enable auto-discovery on Linux hosts
