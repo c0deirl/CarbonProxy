@@ -1,4 +1,7 @@
 <p align="center">
+  <img src="https://github.com/user-attachments/assets/b53b43c0-bc20-489e-afcc-302b939776a5" alt="Alt text" width="30%" />
+</p>
+<p align="center">
   ![Alt text](https://github.com/user-attachments/assets/b53b43c0-bc20-489e-afcc-302b939776a5)
 </p>
 
