@@ -24,6 +24,8 @@ A robust, modern web-based proxy and dashboard for the Elegoo Centauri Carbon 3D
     *   Auto-reconnection logic for both data and video streams.
     *   Smart camera URL scanning to find the correct video feed across various firmware versions.
     *   Handles known protocol quirks and spelling errors in the printer's SDCP implementation.
+*   **Reverse Proxy Compatible**
+    * Compatible with reverse proxies that have websocket support (NPM, Zoraxy).
 
 ## 🐳 Docker Usage (Recommended)
 
