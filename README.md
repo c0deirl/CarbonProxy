@@ -1,5 +1,6 @@
-<img width="1320" height="2390" alt="CentauriMonitor" src="https://github.com/user-attachments/assets/535a95c2-0532-4b08-a0cb-6e7b8720d9f5" />
-   
+
+ <img width="3003" height="602" alt="CentauriMonitor_v1" src="https://github.com/user-attachments/assets/2bb5cf2f-680e-4a3a-8dda-6061de068ac3" />
+
 # CarbonProxy
 
 A robust, modern web-based proxy and dashboard for the Elegoo Centauri Carbon 3D printer. This application connects to the printer via the SDCP protocol, multiplexes the webcam stream and data connection, and serves a beautiful, mobile-friendly interface for remote monitoring.
