@@ -1,14 +1,7 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/b53b43c0-bc20-489e-afcc-302b939776a5" alt="Alt text" width="30%" />
-</p>
-
-# Centauri Carbon Monitor Proxy
+# CarbonProxy
 
 A robust, modern web-based proxy and dashboard for the Elegoo Centauri Carbon 3D printer. This application connects to the printer via the SDCP protocol, multiplexes the webcam stream and data connection, and serves a beautiful, mobile-friendly interface for remote monitoring.
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/50c2f100-b869-4f95-b4cf-efaa540e7445" alt="Alt text" width="40%" />
-</p>
 
 ## 🚀 Key Features
 
@@ -24,8 +17,6 @@ A robust, modern web-based proxy and dashboard for the Elegoo Centauri Carbon 3D
     *   Auto-reconnection logic for both data and video streams.
     *   Smart camera URL scanning to find the correct video feed across various firmware versions.
     *   Handles known protocol quirks and spelling errors in the printer's SDCP implementation.
-*   **Reverse Proxy Compatible**
-    * Compatible with reverse proxies that have websocket support (NPM, Zoraxy).
 
 ## 🐳 Docker Usage (Recommended)
 
@@ -38,7 +29,7 @@ git clone https://github.com/c0deirl/CarbonProxy.git
 cd CarbonProxy
 
 # Start the container
-docker-compose up -d --build
+docker-compose up -d
 ```
 
 Access the dashboard at **`http://<your-server-ip>:8090`**.

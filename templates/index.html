@@ -4,19 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Centauri Monitor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #3b82f6;
-            --success-color: #22c55e;
-            --warning-color: #eab308;
-            --danger-color: #ef4444;
-            --border-color: #475569;
+            --bg-deep: #060709;
+            --bg-primary: #0c0e13;
+            --bg-surface: #12151d;
+            --bg-elevated: #1a1e2b;
+            --bg-card: rgba(26, 30, 43, 0.6);
+
+            --text-primary: #e4e7ef;
+            --text-secondary: #8b92a5;
+            --text-tertiary: #5c6378;
+
+            --accent: #d4a853;
+            --accent-dim: rgba(212, 168, 83, 0.15);
+            --accent-glow: rgba(212, 168, 83, 0.35);
+
+            --neon-orange: #ff6b2b;
+            --neon-orange-dim: rgba(255, 107, 43, 0.15);
+            --neon-cyan: #22d3ee;
+            --neon-cyan-dim: rgba(34, 211, 238, 0.12);
+
+            --success: #4ade80;
+            --success-dim: rgba(74, 222, 128, 0.15);
+
+            --warning: #fbbf24;
+            --warning-dim: rgba(251, 191, 36, 0.15);
+
+            --danger: #f87171;
+            --danger-dim: rgba(248, 113, 113, 0.15);
+
+            --info: #60a5fa;
+            --info-dim: rgba(96, 165, 250, 0.12);
+
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -25,30 +48,37 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-deep);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 168, 83, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(96, 165, 250, 0.04), transparent);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            /* padding-bottom removed to allow footer to sit flush */
         }
 
+        /* ===== HEADER ===== */
         .header {
-            background-color: var(--bg-secondary);
+            background: rgba(12, 14, 19, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             padding: 1rem 1.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
             z-index: 50;
-            backdrop-filter: blur(10px);
-            background-color: rgba(30, 41, 59, 0.9);
         }
 
         .logo {
@@ -61,62 +91,132 @@
             max-width: 70%;
             height: auto;
             width: auto;
-            max-height: 100px; /* Increased slightly to accommodate width */
+            max-height: 100px;
+            filter: drop-shadow(0 0 20px rgba(212, 168, 83, 0.15));
+            transition: filter 0.3s ease;
         }
 
-        @media (min-width: 768px) {
-            .header {
-                /* Keep stacked layout on desktop too as requested */
-                flex-direction: column; 
-                padding: 1.5rem;
-            }
-            .logo-img {
-                max-width: 300px; /* Cap width on large screens */
-                max-height: 120px;
-            }
+        .logo-img:hover {
+            filter: drop-shadow(0 0 30px rgba(212, 168, 83, 0.25));
         }
 
+        /* ===== STATUS BADGE ===== */
         .status-badge {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
-            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.04em;
+            padding: 0.35rem 1rem;
             border-radius: 9999px;
-            background-color: var(--bg-card);
+            background: var(--bg-elevated);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            border: 1px solid var(--border-subtle);
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background-color: var(--text-secondary);
+            background-color: var(--text-tertiary);
+            transition: all 0.3s ease;
         }
 
-        .status-badge.online .status-dot { background-color: var(--success-color); box-shadow: 0 0 8px var(--success-color); }
-        .status-badge.offline .status-dot { background-color: var(--danger-color); }
+        .status-badge.online {
+            background: var(--success-dim);
+            color: var(--success);
+            border-color: rgba(74, 222, 128, 0.15);
+        }
 
+        .status-badge.online .status-dot {
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success), 0 0 20px rgba(74, 222, 128, 0.3);
+            animation: pulse-green 2s ease-in-out infinite;
+        }
+
+        .status-badge.offline {
+            background: var(--danger-dim);
+            color: var(--danger);
+            border-color: rgba(248, 113, 113, 0.15);
+        }
+
+        .status-badge.offline .status-dot {
+            background-color: var(--danger);
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 8px var(--success), 0 0 16px rgba(74, 222, 128, 0.25); }
+            50% { box-shadow: 0 0 14px var(--success), 0 0 28px rgba(74, 222, 128, 0.35); }
+        }
+
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 1.25rem 1rem 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
-        /* Video Feed */
+        /* ===== ALARM / ERROR BANNER ===== */
+        .alarm-banner {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, #dc2626, #f97316);
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            animation: alarm-pulse 2s ease-in-out infinite;
+        }
+
+        .alarm-banner.visible {
+            display: flex;
+        }
+
+        @keyframes alarm-pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+            50% { box-shadow: 0 4px 30px rgba(220, 38, 38, 0.7), inset 0 1px 0 rgba(255,255,255,0.1); }
+        }
+
+        .alarm-icon {
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .alarm-text {
+            flex: 1;
+            letter-spacing: 0.02em;
+        }
+
+        .alarm-code {
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+            font-size: 0.7rem;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* ===== VIDEO FEED ===== */
         .video-wrapper {
             width: 100%;
-            background-color: #000;
-            border-radius: 12px;
+            background: var(--bg-surface);
+            border-radius: 16px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.3),
+                0 2px 4px -2px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
             aspect-ratio: 16/9;
         }
 
@@ -125,6 +225,7 @@
             height: 100%;
             object-fit: contain;
             display: block;
+            background: #000;
         }
 
         .video-overlay {
@@ -136,43 +237,78 @@
             text-align: center;
             pointer-events: none;
             display: none;
+            font-size: 0.9rem;
+        }
+
+        .video-overlay div:first-child {
+            margin-bottom: 0.75rem;
         }
 
         .loading-spinner {
-            border: 3px solid rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border-top: 3px solid var(--accent-color);
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            border: 2.5px solid var(--border-subtle);
+            border-top-color: var(--accent);
+            margin: 0 auto 12px;
+            animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-        /* Status Grid */
+        /* ===== STATUS GRID ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 0.85rem;
         }
 
         @media (min-width: 768px) {
+            .main-content {
+                padding: 1.5rem 1.5rem 2rem;
+                gap: 1.5rem;
+            }
+
             .stats-grid {
                 grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
             }
+
             .video-wrapper {
-                max-height: 70vh;
+                max-height: 65vh;
             }
         }
 
+        /* ===== CARDS ===== */
         .card {
-            background-color: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 1rem;
-            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 1.1rem 1.15rem;
+            border: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
+            gap: 0.6rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        }
+
+        .card:hover {
+            border-color: var(--border-default);
         }
 
         .card.full-width {
@@ -180,74 +316,335 @@
         }
 
         .card-label {
-            font-size: 0.75rem;
+            font-size: 0.68rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .card-value {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
             color: var(--text-primary);
-        }
-        
-        .card-subtext {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
         }
 
-        /* Progress Bar */
+        .card-value span {
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card-value > span.small {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .card-subtext {
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        /* ===== FULL-WIDTH CARD (Job) ===== */
+        .card.full-width {
+            background: linear-gradient(135deg, rgba(26, 30, 43, 0.8), rgba(18, 21, 29, 0.9));
+            border-color: var(--border-subtle);
+        }
+
+        .card.full-width:hover {
+            border-color: var(--accent-dim);
+        }
+
+        /* ===== PROGRESS BAR ===== */
         .progress-container {
-            margin-top: 0.5rem;
-            height: 8px;
-            background-color: var(--bg-card);
-            border-radius: 4px;
+            margin-top: 0.4rem;
+            height: 6px;
+            background-color: var(--bg-deep);
+            border-radius: 100px;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background-color: var(--accent-color);
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 100px;
             position: relative;
         }
-        
+
         .progress-fill.active {
-             background: linear-gradient(90deg, var(--accent-color), #60a5fa);
-             box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(90deg, var(--accent), #e8c47a, var(--accent));
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
-        /* Temperature Colors */
-        .temp-hot { color: #fca5a5; }
-        .temp-warm { color: #fdba74; }
-        .temp-cool { color: #93c5fd; }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
 
-        /* State Badge in Card */
+        /* ===== TEMPERATURE COLORS ===== */
+        .temp-hot { color: #f87171; text-shadow: 0 0 20px rgba(248, 113, 113, 0.2); }
+        .temp-warm { color: #fbbf24; text-shadow: 0 0 20px rgba(251, 191, 36, 0.15); }
+        .temp-cool { color: var(--info); text-shadow: 0 0 20px rgba(96, 165, 250, 0.15); }
+
+        /* ===== STATE PILL ===== */
         .state-pill {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
             font-weight: 600;
-            background-color: var(--bg-card);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
         }
-        
-        .state-printing { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
-        .state-paused { background-color: rgba(234, 179, 8, 0.2); color: #facc15; }
-        .state-idle { background-color: var(--bg-card); color: var(--text-secondary); }
 
+        .state-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.7;
+        }
+
+        .state-printing { background: var(--success-dim); color: var(--success); }
+        .state-paused { background: var(--warning-dim); color: var(--warning); }
+        .state-idle { background: var(--border-subtle); color: var(--text-secondary); }
+
+        /* ===== NEON GLOW TEXT ===== */
+        .neon {
+            color: #fff;
+            text-shadow: 0 0 4px currentColor, 0 0 12px currentColor, 0 0 30px currentColor, 0 0 50px currentColor;
+            animation: neon-flicker 3s ease-in-out infinite;
+        }
+
+        .neon-orange {
+            color: var(--neon-orange);
+            text-shadow: 0 0 4px rgba(255,107,43,0.8), 0 0 15px rgba(255,107,43,0.6), 0 0 35px rgba(255,107,43,0.4), 0 0 60px rgba(255,107,43,0.2);
+        }
+
+        .neon-cyan {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 4px rgba(34,211,238,0.8), 0 0 15px rgba(34,211,238,0.6), 0 0 35px rgba(34,211,238,0.3), 0 0 60px rgba(34,211,238,0.15);
+        }
+
+        @keyframes neon-flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.85; }
+            94% { opacity: 1; }
+            96% { opacity: 0.9; }
+            97% { opacity: 1; }
+        }
+
+        /* ===== FAN CONTROL TOGGLES ===== */
+        .fan-controls {
+            display: flex;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .fan-slider-wrap {
+            align-items: center;
+        }
+
+        .fan-controls input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-elevated);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .fan-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 6px rgba(34, 211, 238, 0.4);
+            cursor: pointer;
+            transition: box-shadow 0.15s ease;
+        }
+
+        .fan-controls input[type="range"]::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+        }
+
+        .fan-controls input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 6px rgba(34, 211, 238, 0.4);
+            cursor: pointer;
+            border: none;
+            transition: box-shadow 0.15s ease;
+        }
+
+        .fan-controls input[type="range"]::-moz-range-thumb:hover {
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+        }
+
+        .fan-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-tertiary);
+            transition: all 0.15s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .fan-toggle:hover {
+            border-color: var(--border-default);
+            background: var(--bg-elevated);
+        }
+
+        .fan-toggle.active {
+            color: #fff;
+            border-color: rgba(255, 107, 43, 0.5);
+            background: var(--neon-orange-dim);
+        }
+
+        .fan-toggle::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.5;
+            transition: opacity 0.15s ease;
+        }
+
+        .fan-toggle.active::before {
+            opacity: 1;
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        /* ===== CONTROL BAR ===== */
+        .control-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px;
+            border: 1px solid var(--border-subtle);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(8px);
+        }
+
+        .control-bar.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .ctrl-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.55rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            transition: all 0.15s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ctrl-btn:hover {
+            border-color: var(--border-default);
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.96);
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .ctrl-btn.pause-btn:hover:not(:disabled) {
+            border-color: rgba(251, 191, 36, 0.4);
+            background: var(--warning-dim);
+            color: var(--warning);
+        }
+
+        .ctrl-btn.resume-btn:hover:not(:disabled) {
+            border-color: rgba(74, 222, 128, 0.3);
+            background: var(--success-dim);
+            color: var(--success);
+        }
+
+        .ctrl-btn.stop-btn:hover:not(:disabled) {
+            border-color: rgba(248, 113, 113, 0.4);
+            background: var(--danger-dim);
+            color: var(--danger);
+        }
+
+        .ctrl-btn.home-btn:hover:not(:disabled) {
+            border-color: rgba(96, 165, 250, 0.4);
+            background: var(--info-dim);
+            color: var(--info);
+        }
+
+        .ctrl-btn svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* ===== FOOTER ===== */
         .footer {
             margin-top: auto;
-            padding: 1rem;
+            padding: 1.25rem 1rem;
             text-align: center;
-            border-top: 1px solid var(--border-color);
-            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+            background: rgba(12, 14, 19, 0.6);
             width: 100%;
         }
 
@@ -256,13 +653,38 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.75rem; /* Smaller text as requested */
+            gap: 0.4rem;
+            color: var(--text-tertiary);
+            font-size: 0.72rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .github-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        .github-link svg {
+            opacity: 0.85;
+            transition: opacity 0.2s ease;
+        }
+
+        .github-link:hover svg {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +700,13 @@
     </header>
 
     <main class="main-content">
+        <!-- Alarm Banner -->
+        <div id="alarmBanner" class="alarm-banner">
+            <span class="alarm-icon">!</span>
+            <span class="alarm-text" id="alarmText">Printer Alarm</span>
+            <span class="alarm-code" id="alarmCode"></span>
+        </div>
+
         <!-- Video Feed -->
         <div class="video-wrapper">
             <img id="stream" src="/stream" alt="Printer Feed" onerror="handleVideoError()">
@@ -285,6 +714,29 @@
                 <div class="loading-spinner"></div>
                 <div>Connecting to Camera...</div>
             </div>
+        </div>
+
+        <!-- Control Bar -->
+        <div id="controlBar" class="control-bar">
+            <button id="btnPauseResume" class="ctrl-btn pause-btn" onclick="sendPauseResume()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                    <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+                </svg>
+                <span id="pauseResumeLabel">Pause</span>
+            </button>
+            <button id="btnStop" class="ctrl-btn stop-btn" onclick="sendStop()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="6" width="12" height="12" rx="1"></rect>
+                </svg>
+                Stop
+            </button>
+            <button id="btnHomeAxis" class="ctrl-btn home-btn" onclick="sendHomeAxis()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l-1.5 1.5L16.25 9H3v2h13.25l-5.75 4.5L12 17l7-7z"></path>
+                </svg>
+                Home
+            </button>
         </div>
 
         <!-- Status Cards -->
@@ -308,27 +760,47 @@
             <!-- Temperatures -->
             <div class="card">
                 <div class="card-label">Nozzle</div>
-                <div class="card-value"><span id="nozzleTemp">0</span><span style="font-size:1rem; color:var(--text-secondary)">°C</span></div>
-                <div class="card-subtext">Target: <span id="nozzleTarget">0</span>°C</div>
+                <div class="card-value"><span id="nozzleTemp">0</span><span class="small">°C</span></div>
+                <div class="card-subtext">Target: <span id="nozzleTarget">0</span></div>
             </div>
 
             <div class="card">
                 <div class="card-label">Bed</div>
-                <div class="card-value"><span id="bedTemp">0</span><span style="font-size:1rem; color:var(--text-secondary)">°C</span></div>
-                <div class="card-subtext">Target: <span id="bedTarget">0</span>°C</div>
+                <div class="card-value"><span id="bedTemp">0</span><span class="small">°C</span></div>
+                <div class="card-subtext">Target: <span id="bedTarget">0</span></div>
             </div>
 
-            <!-- Time / Speed -->
-             <div class="card">
-                <div class="card-label">Fan Speed</div>
-                <div class="card-value"><span id="fanSpeed">0</span><span style="font-size:1rem; color:var(--text-secondary)">%</span></div>
-                <div class="card-subtext">Part Cooling</div>
+            <!-- Fan Cards -->
+            <div class="card">
+                <div class="card-label">Part Cooling Fan</div>
+                <div class="card-value"><span id="fanSpeed">0</span><span class="small">%</span></div>
+                <div class="fan-controls fan-slider-wrap">
+                    <input type="range" id="sliderFanPart" min="0" max="100" value="0" oninput="setFanSpeed('ModelFan', this.value)">
+                </div>
             </div>
-            
+
+            <div class="card">
+                <div class="card-label">Chamber Fan</div>
+                <div class="card-value"><span id="fanBoxSpeed">0</span><span class="small">%</span></div>
+                <div class="fan-controls fan-slider-wrap">
+                    <input type="range" id="sliderFanBox" min="0" max="100" value="0" oninput="setFanSpeed('BoxFan', this.value)">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">Z-Offset</div>
+                <div class="card-value"><span id="zOffsetVal">0.000</span><span class="small">mm</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">Chamber Light</div>
+                <div class="card-value" id="lightStatus"><span id="lightVal">Off</span></div>
+                <div class="card-subtext" style="margin-top: 4px;">Read-only (SDCP limitation)</div>
+            </div>
+
             <div class="card">
                 <div class="card-label">Print Speed</div>
-                <div class="card-value"><span id="printSpeed">100</span><span style="font-size:1rem; color:var(--text-secondary)">%</span></div>
-                <div class="card-subtext">Multiplier</div>
+                <div class="card-value" id="printSpeed">100<span class="small">%</span></div>
             </div>
         </div>
     </main>
@@ -353,8 +825,6 @@
     function handleVideoError() {
         streamImg.style.display = 'none';
         overlay.style.display = 'block';
-        
-        // Retry logic for video stream
         if (retryCount < 5) {
             setTimeout(() => {
                 streamImg.src = "/stream?t=" + new Date().getTime();
@@ -385,27 +855,83 @@
             }
 
             const status = data.status || {};
-            
-            // Temps
+
+            // Temps (with neon glow)
             const nTemp = status.TempOfNozzle || 0;
             const bTemp = status.TempOfHotbed || 0;
-            
+
             const nozzleEl = document.getElementById('nozzleTemp');
             nozzleEl.textContent = nTemp.toFixed(1);
-            nozzleEl.className = nTemp > 50 ? 'card-value temp-hot' : 'card-value';
+            nozzleEl.className = 'card-value';
+            if (nTemp > 50) {
+                nozzleEl.classList.add('neon-orange');
+                nozzleEl.classList.add('temp-hot');
+            } else {
+                nozzleEl.classList.add('neon');
+                nozzleEl.style.color = '#4ade80';
+            }
 
             document.getElementById('nozzleTarget').textContent = status.TempTargetNozzle || 0;
 
             const bedEl = document.getElementById('bedTemp');
             bedEl.textContent = bTemp.toFixed(1);
-            bedEl.className = bTemp > 40 ? 'card-value temp-warm' : 'card-value';
-            
+            bedEl.className = 'card-value';
+            if (bTemp > 40) {
+                bedEl.classList.add('neon-cyan');
+                bedEl.classList.add('temp-warm');
+            } else {
+                bedEl.classList.add('neon');
+                bedEl.style.color = '#60a5fa';
+            }
+
             document.getElementById('bedTarget').textContent = status.TempTargetHotbed || 0;
 
-            // Fans
+            // Fans (with neon glow)
             const fans = status.CurrentFanSpeed || {};
-            document.getElementById('fanSpeed').textContent = fans.ModelFan || 0;
-            document.getElementById('printSpeed').textContent = status.PrintSpeed || 100;
+            const partFanVal = fans.ModelFan || fans.ModeFan || 0;
+            const boxFanVal = fans.BoxFan || 0;
+
+            const fanNumEl = document.getElementById('fanSpeed');
+            fanNumEl.textContent = partFanVal;
+            fanNumEl.parentElement.className = 'card-value';
+            if (partFanVal > 0) {
+                fanNumEl.classList.add('neon-orange');
+            } else {
+                fanNumEl.classList.add('neon-cyan');
+            }
+
+            const boxFanNumEl = document.getElementById('fanBoxSpeed');
+            boxFanNumEl.textContent = boxFanVal;
+            boxFanNumEl.parentElement.className = 'card-value';
+            if (boxFanVal > 0) {
+                boxFanNumEl.classList.add('neon-orange');
+            } else {
+                boxFanNumEl.classList.add('neon-cyan');
+            }
+
+            // Z-Offset
+            const zOffsetEl = document.getElementById('zOffsetVal');
+            if (zOffsetEl) {
+                zOffsetEl.textContent = (status.ZOffset ?? 0).toFixed(3);
+            }
+
+            // Print Speed (with neon glow)
+            const speedEl = document.getElementById('printSpeed');
+            speedEl.textContent = status.PrintSpeed || 100;
+            speedEl.className = 'card-value';
+            if (status.PrintSpeed && status.PrintSpeed !== 100) {
+                speedEl.classList.add('neon-cyan');
+            } else {
+                speedEl.classList.add('neon');
+                speedEl.style.color = '#a78bfa';
+            }
+
+            // Update fan toggle button states
+            updateFanToggles(partFanVal, boxFanVal);
+
+            // Update light status
+            const lightStatus = (status.LightStatus || {}).SecondLight || 0;
+            updateLightToggles(lightStatus);
 
             // Print Info
             const printInfo = status.PrintInfo || {};
@@ -418,11 +944,11 @@
                 13: "Printing",
                 20: "Resuming"
             };
-            
+
             const stateText = statusCodes[printInfo.Status] || (printInfo.Status ? `Code ${printInfo.Status}` : "Idle");
             const badge = document.getElementById('printStateBadge');
             badge.textContent = stateText;
-            
+
             // Update badge style
             badge.className = 'state-pill';
             if (["Printing", "Starting", "Resuming"].includes(stateText)) {
@@ -433,10 +959,33 @@
                 badge.classList.add('state-idle');
             }
 
+            // Track print state for controls
+            currentPrintState = stateText;
+            const controlBar = document.getElementById('controlBar');
+            const pauseResumeLabel = document.getElementById('pauseResumeLabel');
+            const btnPauseResume = document.getElementById('btnPauseResume');
+            const btnStop = document.getElementById('btnStop');
+
+            if (["Printing", "Starting", "Resuming"].includes(stateText)) {
+                controlBar.classList.add('visible');
+                pauseResumeLabel.textContent = 'Pause';
+                btnPauseResume.className = 'ctrl-btn pause-btn';
+                btnPauseResume.onclick = sendPauseResume;
+                btnStop.disabled = false;
+            } else if (stateText === "Paused") {
+                controlBar.classList.add('visible');
+                pauseResumeLabel.textContent = 'Resume';
+                btnPauseResume.className = 'ctrl-btn resume-btn';
+                btnPauseResume.onclick = sendPauseResume;
+                btnStop.disabled = false;
+            } else {
+                controlBar.classList.remove('visible');
+            }
+
             // Progress
             const progress = printInfo.Progress || 0;
             document.getElementById('progress').textContent = progress;
-            
+
             const bar = document.getElementById('progressBar');
             bar.style.width = `${progress}%`;
             if (stateText === "Printing") bar.classList.add('active');
@@ -444,9 +993,68 @@
 
             document.getElementById('currentLayer').textContent = printInfo.CurrentLayer || 0;
             document.getElementById('totalLayer').textContent = printInfo.TotalLayer || 0;
-            
+
             const filename = printInfo.Filename || '';
             document.getElementById('filename').textContent = filename.replace(/\.gcode$/i, '') || 'No Job Active';
+
+            // ===== ALARM / ERROR BANNER =====
+            const alarmBanner = document.getElementById('alarmBanner');
+            const alarmTextEl = document.getElementById('alarmText');
+            const alarmCodeEl = document.getElementById('alarmCode');
+            const errorNum = printInfo.ErrorNumber || 0;
+
+            const printCauses = {
+                1: "Over-temperature (nozzle/bed)",
+                3: "Filament runout detected",
+                6: "Filament jam or clog",
+                7: "Auto-bed leveling failed",
+                12: "USB drive removed during print",
+                13: "X-axis motor/endstop failure",
+                14: "Z-axis motor/endstop failure",
+                17: "General homing failure",
+                18: "Print detachment from bed",
+                19: "General printing exception",
+                20: "Motor movement abnormality",
+                23: "Y-axis motor/endstop failure",
+                24: "G-code file error",
+                25: "Camera connection error",
+                26: "Network connection error",
+                27: "Server connection failed",
+                28: "App disconnected during print",
+                33: "Nozzle thermistor offline",
+                34: "Bed thermistor offline"
+            };
+
+            const fileErrors = {
+                1: "File MD5 check failed",
+                2: "Cannot read print file",
+                3: "Resolution mismatch",
+                4: "Unsupported file format",
+                5: "File not compatible with printer"
+            };
+
+            let alarmMsg = '';
+            if (errorNum > 0) {
+                if (printCauses[errorNum]) {
+                    alarmMsg = printCauses[errorNum];
+                } else if (fileErrors[errorNum]) {
+                    alarmMsg = fileErrors[errorNum];
+                } else {
+                    alarmMsg = `Error #${errorNum}`;
+                }
+                alarmBanner.classList.add('visible');
+                alarmTextEl.textContent = alarmMsg;
+                alarmCodeEl.textContent = errorNum;
+            } else {
+                const extReason = status.ExtendedAlarmReason || status.ErrorStatusReason || 0;
+                if (extReason && printCauses[extReason] && !printInfo.ErrorNumber) {
+                    alarmBanner.classList.add('visible');
+                    alarmTextEl.textContent = printCauses[extReason];
+                    alarmCodeEl.textContent = extReason;
+                } else {
+                    alarmBanner.classList.remove('visible');
+                }
+            }
 
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -456,8 +1064,127 @@
         }
     }
 
-    // Initial load
+    // ===== SDCP Control =====
+    let ws = null;
+    let mainboardId = "";
+
+    function connectControl() {
+        if (ws && ws.readyState <= WebSocket.OPEN) return;
+
+        const proto = location.protocol === "https:" ? "wss:" : "ws:";
+        ws = new WebSocket(`${proto}//${location.host}/sdcp`);
+
+        ws.onopen = () => {
+            console.log("Control WS connected");
+        };
+
+        ws.onclose = (e) => {
+            console.log("Control WS closed:", e.code);
+            ws = null;
+        };
+
+        ws.onerror = (err) => {
+            console.error("Control WS error", err);
+        };
+    }
+
+    function makeSdcpMessage(cmd, data = {}, requestSuffix = "") {
+        const now = Math.floor(Date.now() / 1000);
+        return JSON.stringify({
+            Id: `cli-${now}-${requestSuffix}`,
+            Data: {
+                Cmd: cmd,
+                Data: data,
+                RequestID: `req-${now}`,
+                MainboardID: mainboardId || "",
+                TimeStamp: now,
+                From: 1
+            },
+            Topic: mainboardId ? `sdcp/request/${mainboardId}` : "sdcp/request"
+        });
+    }
+
+    function sendSdcpCommand(cmd, data = {}) {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            console.warn("WS not connected, connecting...");
+            connectControl();
+            setTimeout(() => sendSdcpCommand(cmd, data), 500);
+            return;
+        }
+        const msg = makeSdcpMessage(cmd, data);
+        ws.send(msg);
+    }
+
+    function sendPauseResume() {
+        if (currentPrintState === "Paused") {
+            sendSdcpCommand(131);  // Continue Print
+        } else {
+            sendSdcpCommand(129);  // Pause Print
+        }
+    }
+
+    function sendStop() {
+        sendSdcpCommand(130);  // Stop Print
+    }
+
+    // ===== FAN CONTROL =====
+    function setFanSpeed(fanName, value) {
+        const val = parseInt(value);
+        sendSdcpCommand(403, { TargetFanSpeed: { [fanName]: val } });
+        currentFanStates[fanName] = val;
+    }
+
+    function updateFanToggles(partFanVal, boxFanVal) {
+        const sliderPart = document.getElementById('sliderFanPart');
+        const sliderBox = document.getElementById('sliderFanBox');
+
+        if (sliderPart) sliderPart.value = partFanVal;
+        if (sliderBox) sliderBox.value = boxFanVal;
+    }
+
+    // ===== LIGHT STATUS (read-only - SDCP doesn't expose light control) =====
+
+    function updateLightToggles(lightState) {
+        const lightVal = document.getElementById('lightVal');
+        if (lightVal) {
+            lightVal.textContent = lightState ? 'On' : 'Off';
+        }
+    }
+
+    // ===== HOME AXIS =====
+    function sendHomeAxis() {
+        sendSdcpCommand(140);
+    }
+
+    let currentPrintState = "Idle";
+
+    // ===== Status Update =====
     updateStatus();
+    connectControl();
+
+    // Listen for status updates on control WS to extract mainboard ID
+    (function setupWsListener() {
+        const checkWs = setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                clearInterval(checkWs);
+                ws.addEventListener('message', (event) => {
+                    try {
+                        const msg = JSON.parse(event.data);
+                        const topic = msg.Topic || "";
+                        if (topic.includes("sdcp/status") || topic.includes("sdcp/response")) {
+                            const parts = topic.split("/");
+                            const candidate = parts[parts.length - 1];
+                            if (candidate.length > 20 && !mainboardId) {
+                                mainboardId = candidate;
+                                console.log("Extracted MainboardID:", mainboardId);
+                            }
+                        }
+                    } catch {}
+                });
+            }
+        }, 200);
+    })();
+
     // Poll every 2 seconds
     setInterval(updateStatus, 2000);
 

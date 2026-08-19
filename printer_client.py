@@ -222,25 +222,25 @@ class PrinterClient:
                          self.mainboard_id = data.get("Data", {}).get("MainboardID")
                 
                 if cmd == 386: # Camera URL
-                    # The response format for 386 needs to be checked.
-                    # Ack: 3 usually means "Busy" or "Not Ready" or "Error"
                     logger.info(f"Camera Response: {resp_data}")
                     
                     if isinstance(resp_data, dict):
-                        # Check for success or specific URL field
                         url = resp_data.get("Url") or resp_data.get("URL") or resp_data.get("Data", {}).get("Url")
                         if url:
                             self.camera_url = url
                             logger.info(f"Camera URL set to: {self.camera_url}")
                         else:
-                             # If we got a response but no URL, it might be an error code
                              ack = resp_data.get("Ack")
                              if ack == 3:
                                   logger.warning("Printer returned Ack: 3 (Busy/Error) for camera request.")
-                                  # We should try to guess the URL anyway if we have the IP
-                                  # or retry later.
                     elif isinstance(resp_data, str):
                          self.camera_url = resp_data
+                
+                # Log acks for other commands so we can see errors
+                elif cmd is not None:
+                    ack = resp_data.get("Ack", "-") if isinstance(resp_data, dict) else "-"
+                    if ack != 0 and ack != "-":
+                        logger.warning(f"Cmd {cmd} returned Ack: {ack} - {resp_data}")
 
         except json.JSONDecodeError:
             pass

@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 import asyncio
 import logging
 import os
@@ -14,7 +15,26 @@ from printer_client import PrinterClient
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("CarbonProxy")
 
-app = FastAPI(title="Elegoo Centauri Carbon Proxy")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    discovered = await printer.discover()
+    manual_ip = os.getenv("PRINTER_IP")
+    if manual_ip and not printer.ip:
+        printer.set_manual_ip(manual_ip)
+    manual_id = os.getenv("MAINBOARD_ID")
+    if manual_id:
+        printer.mainboard_id = manual_id
+        logger.info(f"Manual MainboardID set: {manual_id}")
+    if printer.ip:
+        printer.start()
+    else:
+        logger.warning("No printer IP found. Set PRINTER_IP environment variable.")
+    yield
+    # Shutdown
+    printer.connected = False
+
+app = FastAPI(title="Elegoo Centauri Carbon Proxy", lifespan=lifespan)
 
 # Initialize Printer Client
 printer = PrinterClient()
@@ -23,29 +43,9 @@ printer = PrinterClient()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.on_event("startup")
-async def startup_event():
-    # Try to discover printer
-    discovered = await printer.discover()
-    
-    # Check env vars
-    manual_ip = os.getenv("PRINTER_IP")
-    if manual_ip and not printer.ip:
-        printer.set_manual_ip(manual_ip)
-        
-    manual_id = os.getenv("MAINBOARD_ID")
-    if manual_id:
-        printer.mainboard_id = manual_id
-        logger.info(f"Manual MainboardID set: {manual_id}")
-    
-    if printer.ip:
-        printer.start()
-    else:
-        logger.warning("No printer IP found. Set PRINTER_IP environment variable.")
-
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 @app.get("/api/status")
 async def get_status():
