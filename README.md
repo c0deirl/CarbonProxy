@@ -1,5 +1,6 @@
 
- <img width="3003" height="602" alt="CentauriMonitor_v1" src="https://github.com/user-attachments/assets/2bb5cf2f-680e-4a3a-8dda-6061de068ac3" />
+<img width="3003" height="602" alt="logo" src="https://github.com/user-attachments/assets/ae931de6-ccf7-4d96-8e77-ffe6fd6c7539" />
+
 
 # CarbonProxy
 
